@@ -88,6 +88,29 @@
   </main>
 
   <script>
+    class CalculatorError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'CalculatorError';
+      }
+    }
+
+    class InvalidInputError extends CalculatorError {
+      constructor(message, field, value) {
+        super(message);
+        this.name = 'InvalidInputError';
+        this.field = field;
+        this.value = value;
+      }
+    }
+
+    class DivideByZeroError extends CalculatorError {
+      constructor(message = 'Cannot divide by zero.') {
+        super(message);
+        this.name = 'DivideByZeroError';
+      }
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -97,21 +120,39 @@
       let operator = document.querySelector('#operator').value;
 
       try {
-        if (firstNum.trim() === '' || secondNum.trim() === '') {
-          throw new Error('Both number fields must be filled in.');
+        if (firstNum.trim() === '') {
+          throw new InvalidInputError('First number is required.', 'first-num', firstNum);
         }
-        if (isNaN(Number(firstNum)) || isNaN(Number(secondNum))) {
-          throw new TypeError(`Inputs must be numbers (got "${firstNum}" and "${secondNum}").`);
+        if (secondNum.trim() === '') {
+          throw new InvalidInputError('Second number is required.', 'second-num', secondNum);
+        }
+        if (isNaN(Number(firstNum))) {
+          throw new InvalidInputError(`"${firstNum}" is not a valid number.`, 'first-num', firstNum);
+        }
+        if (isNaN(Number(secondNum))) {
+          throw new InvalidInputError(`"${secondNum}" is not a valid number.`, 'second-num', secondNum);
         }
         if (operator === '/' && Number(secondNum) === 0) {
-          throw new RangeError('Cannot divide by zero.');
+          throw new DivideByZeroError();
         }
 
         let result = eval(`${firstNum} ${operator} ${secondNum}`);
         output.innerHTML = result;
       } catch (err) {
-        console.error(err);
-        output.innerHTML = `Error: ${err.message}`;
+        if (err instanceof InvalidInputError) {
+          console.error(`[${err.name}] field=${err.field} value="${err.value}" — ${err.message}`);
+          output.innerHTML = `Input error: ${err.message}`;
+        } else if (err instanceof DivideByZeroError) {
+          console.error(`[${err.name}] ${err.message}`);
+          output.innerHTML = `Math error: ${err.message}`;
+        } else if (err instanceof CalculatorError) {
+          console.error(`[${err.name}] ${err.message}`);
+          output.innerHTML = `Calculator error: ${err.message}`;
+        } else {
+          console.error('Unexpected error:', err);
+          output.innerHTML = `Unexpected error: ${err.message}`;
+          throw err;
+        }
       } finally {
         console.log(`Calculation attempted: ${firstNum} ${operator} ${secondNum}`);
       }
