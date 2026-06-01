@@ -95,7 +95,26 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      try {
+        if (firstNum.trim() === '' || secondNum.trim() === '') {
+          throw new Error('Both number fields must be filled in.');
+        }
+        if (isNaN(Number(firstNum)) || isNaN(Number(secondNum))) {
+          throw new TypeError(`Inputs must be numbers (got "${firstNum}" and "${secondNum}").`);
+        }
+        if (operator === '/' && Number(secondNum) === 0) {
+          throw new RangeError('Cannot divide by zero.');
+        }
+
+        let result = eval(`${firstNum} ${operator} ${secondNum}`);
+        output.innerHTML = result;
+      } catch (err) {
+        console.error(err);
+        output.innerHTML = `Error: ${err.message}`;
+      } finally {
+        console.log(`Calculation attempted: ${firstNum} ${operator} ${secondNum}`);
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
