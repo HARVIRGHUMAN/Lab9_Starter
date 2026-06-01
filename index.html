@@ -5,6 +5,15 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "eb7843c038644886b0b0afe1c0dff14d"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+
   <title>Lab 9</title>
 
   <style>
@@ -88,6 +97,19 @@
   </main>
 
   <script>
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.log('[window.onerror] Caught a global error:');
+      console.log(`  message: ${message}`);
+      console.log(`  source:  ${source}`);
+      console.log(`  line:    ${lineno}, col: ${colno}`);
+      console.log('  error:  ', error);
+      return false;
+    };
+
+    window.addEventListener('error', (event) => {
+      console.log('[window addEventListener "error"] Caught:', event.message);
+    });
+
     class CalculatorError extends Error {
       constructor(message) {
         super(message);
@@ -167,11 +189,11 @@
     ];
 
     document.querySelector('#btn-log').addEventListener('click', () => {
-      console.log('Hello from console.log!', sampleData[0]);
+      console.log('Console Log Demo');
     });
 
     document.querySelector('#btn-error').addEventListener('click', () => {
-      console.error('This is a console.error message');
+      console.error('Console Error Demo');
     });
 
     document.querySelector('#btn-count').addEventListener('click', () => {
@@ -225,6 +247,12 @@
       function inner() { console.trace('Trace from inner()'); }
       function outer() { inner(); }
       outer();
+    });
+
+    document.querySelector('#btn-global-error').addEventListener('click', () => {
+      setTimeout(() => {
+        nonExistentFunction();
+      }, 0);
     });
   </script>
 </body>
