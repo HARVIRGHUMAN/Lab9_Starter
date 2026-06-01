@@ -69,21 +69,21 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button id="btn-log">Console Log</button>
+      <button id="btn-error">Console Error</button>
+      <button id="btn-count">Console Count</button>
+      <button id="btn-warn">Console Warn</button>
+      <button id="btn-assert">Console Assert</button>
+      <button id="btn-clear">Console Clear</button>
+      <button id="btn-dir">Console Dir</button>
+      <button id="btn-dirxml">Console dirxml</button>
+      <button id="btn-group-start">Console Group Start</button>
+      <button id="btn-group-end">Console Group End</button>
+      <button id="btn-table">Console Table</button>
+      <button id="btn-timer-start">Start Timer</button>
+      <button id="btn-timer-end">End Timer</button>
+      <button id="btn-trace">Console Trace</button>
+      <button id="btn-global-error">Trigger a Global Error</button>
     </section>
   </main>
 
@@ -100,8 +100,72 @@
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+    const sampleData = [
+      { name: 'Alice', age: 30, role: 'Engineer' },
+      { name: 'Bob', age: 25, role: 'Designer' },
+      { name: 'Carol', age: 35, role: 'Manager' }
+    ];
+
+    document.querySelector('#btn-log').addEventListener('click', () => {
+      console.log('Hello from console.log!', sampleData[0]);
+    });
+
+    document.querySelector('#btn-error').addEventListener('click', () => {
+      console.error('This is a console.error message');
+    });
+
+    document.querySelector('#btn-count').addEventListener('click', () => {
+      console.count('Count button clicks');
+    });
+
+    document.querySelector('#btn-warn').addEventListener('click', () => {
+      console.warn('This is a console.warn message');
+    });
+
+    document.querySelector('#btn-assert').addEventListener('click', () => {
+      console.assert(1 === 2, 'Assertion failed: 1 is not equal to 2');
+    });
+
+    document.querySelector('#btn-clear').addEventListener('click', () => {
+      console.clear();
+    });
+
+    document.querySelector('#btn-dir').addEventListener('click', () => {
+      console.dir(document.querySelector('form'));
+    });
+
+    document.querySelector('#btn-dirxml').addEventListener('click', () => {
+      console.dirxml(document.querySelector('main'));
+    });
+
+    document.querySelector('#btn-group-start').addEventListener('click', () => {
+      console.group('My Group');
+      console.log('This message is inside the group');
+      console.log('So is this one');
+    });
+
+    document.querySelector('#btn-group-end').addEventListener('click', () => {
+      console.log('Last message before group ends');
+      console.groupEnd();
+    });
+
+    document.querySelector('#btn-table').addEventListener('click', () => {
+      console.table(sampleData);
+    });
+
+    document.querySelector('#btn-timer-start').addEventListener('click', () => {
+      console.time('demo-timer');
+    });
+
+    document.querySelector('#btn-timer-end').addEventListener('click', () => {
+      console.timeEnd('demo-timer');
+    });
+
+    document.querySelector('#btn-trace').addEventListener('click', () => {
+      function inner() { console.trace('Trace from inner()'); }
+      function outer() { inner(); }
+      outer();
+    });
   </script>
 </body>
 
